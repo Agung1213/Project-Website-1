@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e17;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --accent: #00e5ff;
+    --accent2: #7c3aed;
+    --accent3: #f59e0b;
+    --text: #e2e8f0;
+    --text-muted: #64748b;
+    --border: rgba(0,229,255,0.15);
+    --glow: 0 0 20px rgba(0,229,255,0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom Cursor */
+  .cursor {
+    position: fixed; width: 12px; height: 12px;
+    background: var(--accent); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    position: fixed; width: 40px; height: 40px;
+    border: 1px solid var(--accent); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease, width 0.3s, height 0.3s;
+    opacity: 0.5;
+  }
+
+  /* Grid Background */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: 
+      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 48px;
+    background: rgba(10,14,23,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 14px; color: var(--accent);
+    letter-spacing: 2px; text-transform: uppercase;
+  }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    font-size: 13px; color: var(--text-muted);
+    text-decoration: none; letter-spacing: 1px;
+    text-transform: uppercase; transition: color 0.2s;
+    font-family: 'Space Mono', monospace;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* ── SECTIONS ── */
+  section { position: relative; z-index: 1; }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 120px 48px 60px;
+    position: relative; overflow: hidden;
+  }
+  .hero-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px; color: var(--accent);
+    letter-spacing: 4px; text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: inline-block;
+    width: 40px; height: 1px; background: var(--accent);
+  }
+  .hero-name {
+    font-size: clamp(56px, 8vw, 112px);
+    font-weight: 800; line-height: 0.9;
+    letter-spacing: -3px;
+    background: linear-gradient(135deg, #fff 30%, var(--accent) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-role {
+    margin-top: 28px;
+    display: flex; flex-wrap: wrap; gap: 12px;
+  }
+  .role-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px; padding: 6px 16px;
+    border: 1px solid var(--border);
+    border-radius: 2px; color: var(--text-muted);
+    background: var(--surface);
+    transition: all 0.3s;
+  }
+  .role-badge.active, .role-badge:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: var(--glow);
+    background: rgba(0,229,255,0.05);
+  }
+  .hero-desc {
+    max-width: 560px; margin-top: 32px;
+    font-size: 16px; color: var(--text-muted);
+    line-height: 1.8;
+  }
+  .hero-cta {
+    margin-top: 48px; display: flex; gap: 16px; flex-wrap: wrap;
+  }
+  .btn-primary {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px; letter-spacing: 1px;
+    padding: 14px 32px; background: var(--accent);
+    color: var(--bg); border: none; cursor: none;
+    text-decoration: none; display: inline-block;
+    transition: all 0.3s; font-weight: 700;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  }
+  .btn-primary:hover { background: #fff; transform: translateY(-2px); box-shadow: var(--glow); }
+  .btn-secondary {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px; letter-spacing: 1px;
+    padding: 14px 32px; background: transparent;
+    color: var(--text); border: 1px solid var(--border); cursor: none;
+    text-decoration: none; display: inline-block;
+    transition: all 0.3s;
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Floating stats */
+  .hero-stats {
+    position: absolute; right: 48px; top: 50%;
+    transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 24px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px 24px; text-align: center;
+    min-width: 120px;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+  }
+  .stat-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 28px; font-weight: 700; color: var(--accent);
+  }
+  .stat-label {
+    font-size: 11px; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 1px;
+    margin-top: 4px;
+  }
+
+  /* Animated lines */
+  .hero-line {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    animation: scanline 3s ease-in-out infinite;
+  }
+  @keyframes scanline { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+  /* ── ABOUT ── */
+  #about {
+    padding: 100px 48px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+    align-items: center;
+  }
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; color: var(--accent);
+    letter-spacing: 4px; text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-size: 48px; font-weight: 800;
+    line-height: 1.05; letter-spacing: -1px;
+  }
+  .about-text { font-size: 15px; color: var(--text-muted); line-height: 1.9; margin-top: 20px; }
+
+  .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .skill-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 16px;
+    transition: all 0.3s;
+  }
+  .skill-item:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .skill-name { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+  .skill-bar { height: 3px; background: var(--surface2); position: relative; }
+  .skill-fill {
+    position: absolute; top: 0; left: 0; height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width 1.5s ease;
+  }
+  .skill-pct {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; color: var(--accent); margin-top: 4px; text-align: right;
+  }
+
+  /* ── PORTFOLIO ── */
+  #portfolio { padding: 100px 48px; }
+  .portfolio-header {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    margin-bottom: 48px; flex-wrap: wrap; gap: 20px;
+  }
+  .filter-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+  .filter-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; padding: 8px 16px;
+    background: transparent; border: 1px solid var(--border);
+    color: var(--text-muted); cursor: none; letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+  .filter-btn.active, .filter-btn:hover {
+    background: var(--accent); color: var(--bg); border-color: var(--accent);
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
+  }
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    overflow: hidden; position: relative;
+    transition: all 0.3s;
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+  }
+  .project-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,229,255,0.15);
+  }
+  .project-visual {
+    height: 180px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 64px; position: relative; overflow: hidden;
+  }
+  .project-visual::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to bottom, transparent 50%, var(--surface));
+  }
+  .project-body { padding: 20px 24px 24px; }
+  .project-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; padding: 3px 8px;
+    border: 1px solid var(--border); color: var(--text-muted);
+    letter-spacing: 1px;
+  }
+  .project-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .project-desc { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+  .project-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .project-link {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; color: var(--accent);
+    text-decoration: none; letter-spacing: 1px;
+    display: flex; align-items: center; gap: 6px;
+    transition: gap 0.2s;
+  }
+  .project-link:hover { gap: 10px; }
+
+  /* ── UPLOAD SECTION ── */
+  #upload { padding: 100px 48px; background: var(--surface); }
+  .upload-container { max-width: 800px; margin: 0 auto; }
+  .upload-area {
+    border: 2px dashed var(--border);
+    padding: 60px; text-align: center;
+    transition: all 0.3s; cursor: pointer;
+    position: relative; overflow: hidden;
+    background: var(--bg);
+  }
+  .upload-area:hover, .upload-area.drag-over {
+    border-color: var(--accent);
+    background: rgba(0,229,255,0.03);
+  }
+  .upload-icon { font-size: 48px; margin-bottom: 16px; }
+  .upload-title { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+  .upload-subtitle { font-size: 14px; color: var(--text-muted); }
+  #fileInput { display: none; }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-group.full { grid-column: 1/-1; }
+  .form-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; color: var(--accent); letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .form-input, .form-select, .form-textarea {
+    background: var(--bg); border: 1px solid var(--border);
+    color: var(--text); padding: 12px 16px;
+    font-family: 'Syne', sans-serif; font-size: 14px;
+    transition: border-color 0.2s; outline: none;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px rgba(0,229,255,0.2);
+  }
+  .form-select { cursor: pointer; }
+  .form-textarea { resize: vertical; min-height: 100px; }
+  .form-select option { background: var(--bg); }
+
+  .uploaded-list { margin-top: 32px; display: flex; flex-direction: column; gap: 12px; }
+  .uploaded-item {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 16px 20px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .uploaded-item-name { font-size: 14px; font-weight: 600; }
+  .uploaded-item-meta {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; color: var(--text-muted); margin-top: 2px;
+  }
+  .btn-remove {
+    background: transparent; border: 1px solid rgba(239,68,68,0.3);
+    color: #ef4444; padding: 6px 12px; cursor: pointer;
+    font-family: 'Space Mono', monospace; font-size: 11px;
+    transition: all 0.2s;
+  }
+  .btn-remove:hover { background: rgba(239,68,68,0.1); }
+
+  /* ── CONTACT ── */
+  #contact { padding: 100px 48px; text-align: center; }
+  .contact-inner { max-width: 600px; margin: 0 auto; }
+  .contact-email {
+    font-size: clamp(24px, 4vw, 48px);
+    font-weight: 800; color: var(--accent);
+    text-decoration: none;
+    display: block; margin: 32px 0;
+    transition: text-shadow 0.3s;
+  }
+  .contact-email:hover { text-shadow: var(--glow); }
+  .social-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
+  .social-link {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px; color: var(--text-muted);
+    text-decoration: none; letter-spacing: 2px;
+    text-transform: uppercase; transition: color 0.2s;
+    padding: 8px 16px; border: 1px solid var(--border);
+  }
+  .social-link:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 24px 48px;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-muted);
+  }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: 32px; right: 32px;
+    background: var(--surface); border: 1px solid var(--accent);
+    padding: 16px 24px; font-size: 14px;
+    transform: translateY(100px); opacity: 0;
+    transition: all 0.4s; z-index: 200;
+    box-shadow: var(--glow);
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: fadeUp 0.7s ease forwards; opacity: 0; }
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.2s; }
+  .delay-3 { animation-delay: 0.3s; }
+  .delay-4 { animation-delay: 0.5s; }
+
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    #hero { padding: 100px 24px 60px; }
+    .hero-stats { display: none; }
+    #about { grid-template-columns: 1fr; padding: 60px 24px; gap: 40px; }
+    #portfolio, #upload, #contact { padding: 60px 24px; }
+    footer { padding: 20px 24px; flex-direction: column; gap: 8px; text-align: center; }
+    .form-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">&lt;data.portfolio/&gt;</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#portfolio">Projects</a></li>
+    <li><a href="#upload">Upload</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-eyebrow fade-up">Available for opportunities</div>
+  <h1 class="hero-name fade-up delay-1" id="heroName">Nama Anda</h1>
+  <div class="hero-role fade-up delay-2">
+    <span class="role-badge active">Data Analyst</span>
+    <span class="role-badge">Data Scientist</span>
+    <span class="role-badge">Business Intelligence</span>
+    <span class="role-badge">ML Engineer</span>
+  </div>
+  <p class="hero-desc fade-up delay-3">
+    Mengubah data mentah menjadi <em>insight</em> yang bermakna. Spesialis dalam analisis statistik, machine learning, dan visualisasi data untuk mendukung keputusan bisnis berbasis data.
+  </p>
+  <div class="hero-cta fade-up delay-4">
+    <a href="#portfolio" class="btn-primary">Lihat Proyek →</a>
+    <a href="#upload" class="btn-secondary">Unggah Portofolio</a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat-card">
+      <div class="stat-num" id="statProjects">0</div>
+      <div class="stat-label">Projects</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="statExp">0+</div>
+      <div class="stat-label">Yrs Exp</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="statTools">0</div>
+      <div class="stat-label">Tools</div>
+    </div>
+  </div>
+
+  <div class="hero-line"></div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div>
+    <div class="section-label">// 01 — About</div>
+    <h2 class="section-title">Tentang<br>Saya</h2>
+    <p class="about-text">
+      Seorang profesional data yang bersemangat dalam menemukan pola tersembunyi dalam data kompleks. Dengan keahlian di Python, R, SQL, dan tools BI modern, saya membantu organisasi memaksimalkan nilai dari aset data mereka.
+    </p>
+    <p class="about-text" style="margin-top:12px;">
+      Pengalaman mencakup customer analytics, prediksi churn, segmentasi pasar, serta dashboard eksekutif yang memudahkan pengambilan keputusan strategis.
+    </p>
+  </div>
+  <div>
+    <div class="section-label" style="margin-bottom:20px;">// Tools & Skills</div>
+    <div class="skills-grid" id="skillsGrid"></div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="portfolio">
+  <div class="portfolio-header">
+    <div>
+      <div class="section-label">// 02 — Projects</div>
+      <h2 class="section-title" style="font-size:40px;">Proyek Pilihan</h2>
+    </div>
+    <div class="filter-tabs">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="analysis">Analysis</button>
+      <button class="filter-btn" data-filter="ml">ML / AI</button>
+      <button class="filter-btn" data-filter="bi">BI / Dashboard</button>
+    </div>
+  </div>
+  <div class="projects-grid" id="projectsGrid"></div>
+</section>
+
+<!-- UPLOAD -->
+<section id="upload">
+  <div class="upload-container">
+    <div class="section-label" style="text-align:center;">// 03 — Upload</div>
+    <h2 class="section-title" style="text-align:center;font-size:40px;margin-bottom:48px;">Tambah Portofolio</h2>
+
+    <div class="upload-area" id="uploadArea">
+      <div class="upload-icon">📊</div>
+      <div class="upload-title">Seret & Lepas file di sini</div>
+      <div class="upload-subtitle">PDF, gambar, Notebook (.ipynb), atau klik untuk memilih file</div>
+      <input type="file" id="fileInput" multiple accept=".pdf,.png,.jpg,.jpeg,.ipynb,.csv,.xlsx,.pptx">
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Judul Proyek</label>
+        <input class="form-input" id="projTitle" placeholder="e.g. Customer Churn Analysis" type="text">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Kategori</label>
+        <select class="form-select" id="projCat">
+          <option value="">Pilih kategori...</option>
+          <option value="analysis">Data Analysis</option>
+          <option value="ml">Machine Learning</option>
+          <option value="bi">Business Intelligence</option>
+          <option value="viz">Data Visualization</option>
+          <option value="nlp">NLP / Text Mining</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tools / Stack</label>
+        <input class="form-input" id="projTools" placeholder="Python, Pandas, Scikit-learn..." type="text">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tahun</label>
+        <input class="form-input" id="projYear" placeholder="2024" type="number" min="2010" max="2030">
+      </div>
+      <div class="form-group full">
+        <label class="form-label">Deskripsi Singkat</label>
+        <textarea class="form-textarea" id="projDesc" placeholder="Ringkasan proyek, metodologi, dan hasil utama..."></textarea>
+      </div>
+    </div>
+
+    <div style="margin-top:24px; text-align:center;">
+      <button class="btn-primary" id="addProjectBtn" style="cursor:pointer;">+ Tambahkan ke Portofolio</button>
+    </div>
+
+    <div class="uploaded-list" id="uploadedList"></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="section-label">// 04 — Contact</div>
+    <h2 class="section-title" style="font-size:40px;">Mari Berkolaborasi</h2>
+    <a href="mailto:email@anda.com" class="contact-email" id="contactEmail">email@anda.com</a>
+    <div class="social-links">
+      <a href="#" class="social-link">LinkedIn</a>
+      <a href="#" class="social-link">GitHub</a>
+      <a href="#" class="social-link">Kaggle</a>
+      <a href="#" class="social-link">Medium</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span id="footerName">&lt;data.portfolio/&gt;</span>
+  <span>© 2025 — Built with 📊 & code</span>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CURSOR ──
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+  setTimeout(() => {
+    ring.style.left = e.clientX + 'px';
+    ring.style.top = e.clientY + 'px';
+  }, 80);
+});
+
+// ── DATA ──
+const skills = [
+  { name: 'Python / R', pct: 92 },
+  { name: 'SQL / BigQuery', pct: 88 },
+  { name: 'Tableau / Power BI', pct: 85 },
+  { name: 'Machine Learning', pct: 80 },
+  { name: 'Statistics', pct: 90 },
+  { name: 'Deep Learning', pct: 72 },
+];
+
+const sampleProjects = [
+  {
+    id: 1, title: 'Customer Churn Prediction',
+    desc: 'Model XGBoost untuk memprediksi churn pelanggan telekomunikasi dengan akurasi 94%, menghemat 30% biaya retensi.',
+    tags: ['Python', 'XGBoost', 'Scikit-learn'], category: 'ml',
+    emoji: '🔮', color: 'linear-gradient(135deg, #1a1a2e, #16213e)',
+    year: 2024
+  },
+  {
+    id: 2, title: 'Sales Analytics Dashboard',
+    desc: 'Dashboard interaktif Power BI untuk monitoring KPI penjualan real-time dengan drill-down hingga level SKU.',
+    tags: ['Power BI', 'DAX', 'SQL'], category: 'bi',
+    emoji: '📈', color: 'linear-gradient(135deg, #0d1b2a, #1b2838)',
+    year: 2024
+  },
+  {
+    id: 3, title: 'Market Segmentation Analysis',
+    desc: 'Segmentasi pelanggan menggunakan K-Means & RFM analysis untuk strategi marketing yang lebih efektif.',
+    tags: ['Python', 'K-Means', 'Plotly'], category: 'analysis',
+    emoji: '🧩', color: 'linear-gradient(135deg, #1a0a2e, #2d1b4e)',
+    year: 2023
+  },
+  {
+    id: 4, title: 'Sentiment Analysis NLP',
+    desc: 'Analisis sentimen ulasan produk e-commerce menggunakan BERT fine-tuned pada dataset Bahasa Indonesia.',
+    tags: ['NLP', 'BERT', 'HuggingFace'], category: 'ml',
+    emoji: '💬', color: 'linear-gradient(135deg, #0a2e1a, #0d3d20)',
+    year: 2024
+  },
+  {
+    id: 5, title: 'Supply Chain Optimization',
+    desc: 'Optimasi rantai pasok dengan analisis lead time, demand forecasting, dan visualisasi bottleneck.',
+    tags: ['Python', 'Prophet', 'Tableau'], category: 'analysis',
+    emoji: '⚙️', color: 'linear-gradient(135deg, #2e1a0a, #3d2a0d)',
+    year: 2023
+  },
+  {
+    id: 6, title: 'HR Analytics Dashboard',
+    desc: 'Dashboard interaktif untuk analisis turnover karyawan, kepuasan kerja, dan prediksi attrition.',
+    tags: ['Power BI', 'Python', 'R'], category: 'bi',
+    emoji: '👥', color: 'linear-gradient(135deg, #1a0a2e, #16082a)',
+    year: 2024
+  },
+];
+
+// ── STATE ──
+let projects = [...sampleProjects];
+let uploadedFiles = [];
+let currentFilter = 'all';
+
+// ── RENDER SKILLS ──
+const skillsGrid = document.getElementById('skillsGrid');
+skills.forEach(s => {
+  const el = document.createElement('div');
+  el.className = 'skill-item';
+  el.innerHTML = `
+    <div class="skill-name">${s.name}</div>
+    <div class="skill-bar"><div class="skill-fill" style="width:0%" data-pct="${s.pct}"></div></div>
+    <div class="skill-pct">${s.pct}%</div>
+  `;
+  skillsGrid.appendChild(el);
+});
+
+// Animate skill bars on scroll
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.skill-fill').forEach(bar => {
+        bar.style.width = bar.dataset.pct + '%';
+      });
+    }
+  });
+}, { threshold: 0.3 });
+observer.observe(document.getElementById('about'));
+
+// ── RENDER PROJECTS ──
+function renderProjects() {
+  const grid = document.getElementById('projectsGrid');
+  const filtered = currentFilter === 'all' ? projects : projects.filter(p => p.category === currentFilter);
+  grid.innerHTML = '';
+  filtered.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'project-card';
+    card.innerHTML = `
+      <div class="project-visual" style="background:${p.color || 'var(--surface2)'}">
+        <span style="position:relative;z-index:1">${p.emoji || '📊'}</span>
+      </div>
+      <div class="project-body">
+        <div class="project-tags">
+          ${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+          <span class="tag" style="color:var(--accent3);border-color:var(--accent3)">${p.year}</span>
+        </div>
+        <div class="project-title">${p.title}</div>
+        <div class="project-desc">${p.desc}</div>
+      </div>
+      <div class="project-footer">
+        <a href="#" class="project-link">Lihat Detail →</a>
+        <span style="font-family:'Space Mono',monospace;font-size:11px;color:var(--text-muted)">${p.category.toUpperCase()}</span>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+renderProjects();
+
+// ── FILTER ──
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    renderProjects();
+  });
+});
+
+// ── UPLOAD ──
+const uploadArea = document.getElementById('uploadArea');
+const fileInput = document.getElementById('fileInput');
+
+uploadArea.addEventListener('click', () => fileInput.click());
+uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('drag-over'); });
+uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag-over'));
+uploadArea.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadArea.classList.remove('drag-over');
+  handleFiles(e.dataTransfer.files);
+});
+fileInput.addEventListener('change', e => handleFiles(e.target.files));
+
+function handleFiles(files) {
+  Array.from(files).forEach(f => {
+    uploadedFiles.push(f);
+    renderUploadedItem(f);
+  });
+  showToast(`✓ ${files.length} file dipilih`);
+}
+
+function renderUploadedItem(file) {
+  const list = document.getElementById('uploadedList');
+  const item = document.createElement('div');
+  item.className = 'uploaded-item';
+  item.dataset.name = file.name;
+  const size = (file.size / 1024).toFixed(1) + ' KB';
+  const ext = file.name.split('.').pop().toUpperCase();
+  item.innerHTML = `
+    <div>
+      <div class="uploaded-item-name">📎 ${file.name}</div>
+      <div class="uploaded-item-meta">${ext} · ${size}</div>
+    </div>
+    <button class="btn-remove" onclick="removeFile('${file.name}', this.closest('.uploaded-item'))">Hapus</button>
+  `;
+  list.appendChild(item);
+}
+
+function removeFile(name, el) {
+  uploadedFiles = uploadedFiles.filter(f => f.name !== name);
+  el.remove();
+}
+
+// ── ADD PROJECT ──
+document.getElementById('addProjectBtn').addEventListener('click', () => {
+  const title = document.getElementById('projTitle').value.trim();
+  const cat = document.getElementById('projCat').value;
+  const tools = document.getElementById('projTools').value.trim();
+  const year = document.getElementById('projYear').value || new Date().getFullYear();
+  const desc = document.getElementById('projDesc').value.trim();
+
+  if (!title) { showToast('⚠ Judul proyek wajib diisi!', true); return; }
+
+  const emojis = { analysis: '🔍', ml: '🤖', bi: '📊', viz: '🎨', nlp: '💬' };
+  const colors = {
+    analysis: 'linear-gradient(135deg, #0a1628, #1a2840)',
+    ml: 'linear-gradient(135deg, #1a0a28, #2d1a40)',
+    bi: 'linear-gradient(135deg, #0a2010, #152e18)',
+    viz: 'linear-gradient(135deg, #281a0a, #3d2810)',
+    nlp: 'linear-gradient(135deg, #0a1a28, #122236)',
+  };
+
+  const newProject = {
+    id: Date.now(),
+    title, desc: desc || 'Proyek data analysis.',
+    tags: tools ? tools.split(',').map(t => t.trim()).slice(0, 4) : ['Data'],
+    category: cat || 'analysis',
+    emoji: emojis[cat] || '📊',
+    color: colors[cat] || 'var(--surface2)',
+    year: parseInt(year)
+  };
+
+  projects.unshift(newProject);
+  currentFilter = 'all';
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('[data-filter="all"]').classList.add('active');
+  renderProjects();
+
+  // Clear form
+  ['projTitle','projCat','projTools','projYear','projDesc'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('uploadedList').innerHTML = '';
+  uploadedFiles = [];
+
+  const num = document.getElementById('statProjects');
+  num.textContent = parseInt(num.textContent) + 1;
+
+  showToast('🎉 Proyek berhasil ditambahkan!');
+  document.getElementById('portfolio').scrollIntoView({ behavior: 'smooth' });
+});
+
+// ── COUNTER ANIMATION ──
+function animateCount(el, target) {
+  let cur = 0;
+  const step = Math.ceil(target / 40);
+  const t = setInterval(() => {
+    cur = Math.min(cur + step, target);
+    el.textContent = cur + (el.id === 'statExp' ? '+' : '');
+    if (cur >= target) clearInterval(t);
+  }, 40);
+}
+const statsObserver = new IntersectionObserver(entries => {
+  if (entries[0].isIntersecting) {
+    animateCount(document.getElementById('statProjects'), projects.length);
+    animateCount(document.getElementById('statExp'), 3);
+    animateCount(document.getElementById('statTools'), 15);
+    statsObserver.disconnect();
+  }
+}, { threshold: 0.5 });
+const statsEl = document.querySelector('.hero-stats');
+if (statsEl) statsObserver.observe(statsEl);
+
+// ── TOAST ──
+function showToast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.borderColor = isError ? '#ef4444' : 'var(--accent)';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── ROLE BADGE CYCLE ──
+const badges = document.querySelectorAll('.role-badge');
+let activeBadge = 0;
+setInterval(() => {
+  badges[activeBadge].classList.remove('active');
+  activeBadge = (activeBadge + 1) % badges.length;
+  badges[activeBadge].classList.add('active');
+}, 2000);
+
+// ── SMOOTH SCROLL ──
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+</script>
+</body>
+</html>
